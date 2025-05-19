@@ -12,8 +12,35 @@ export default function RecipesFormScreen({ route, navigation }) {
   );
 
   const saverecipe = async () => {
- 
-  };
+  try {
+    // 1. Create new recipe object
+    const newrecipe = {
+      title,
+      image,
+      description,
+    };
+
+    // 2. Retrieve existing recipes from AsyncStorage
+    const stored = await AsyncStorage.getItem("customrecipes");
+    let recipes = stored ? JSON.parse(stored) : [];
+
+    if (recipeToEdit && typeof recipeIndex === "number") {
+      // 3a. Edit existing recipe
+      recipes[recipeIndex] = newrecipe;
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(recipes));
+      if (onrecipeEdited) onrecipeEdited();
+    } else {
+      // 3b. Add new recipe
+      recipes.push(newrecipe);
+      await AsyncStorage.setItem("customrecipes", JSON.stringify(recipes));
+    }
+
+    // 4. Navigate back
+    navigation.goBack();
+  } catch (error) {
+    console.error("Error saving recipe:", error);
+  }
+};
 
   return (
     <View style={styles.container}>

@@ -2,6 +2,7 @@ import { View, Text, Pressable, Image, StyleSheet, FlatList, TouchableOpacity } 
 import React from "react";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp,} from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+import { toggleFavorite } from "../redux/favoritesSlice";
 
 export default function Recipe({ categories, foods }) {
   const navigation = useNavigation();
@@ -13,7 +14,14 @@ export default function Recipe({ categories, foods }) {
   return (
     <View style={styles.container}>
       <View testID="recipesDisplay">
-            
+            <FlatList
+              data={foods}
+              keyExtractor={(item) => item.idFood}
+              renderItem={renderItem}
+              numColumns={2}
+              columnWrapperStyle={styles.row}
+              showsVerticalScrollIndicator={false}
+            />
       </View>
     </View>
   );
@@ -24,7 +32,22 @@ const ArticleCard = ({ item, index, navigation }) => {
     <View
       style={[styles.cardContainer, { paddingLeft: 20, paddingRight: 15}]} testID="articleDisplay"
     >
-   
+  <TouchableOpacity
+  onPress={() => navigation.navigate("RecipeDetail", { recipe: item })}
+  activeOpacity={0.8}
+>
+  <Image
+    source={{ uri: item.recipeImage }}
+    style={[styles.articleImage, { aspectRatio: 1 }]}
+    resizeMode="cover"
+  />
+  <Text style={styles.articleText} numberOfLines={1}>
+    {item.recipeName}
+  </Text>
+  <Text style={styles.articleDescription} numberOfLines={2}>
+    {item.cookingDescription}
+  </Text>
+</TouchableOpacity>
     </View>
   );
 };

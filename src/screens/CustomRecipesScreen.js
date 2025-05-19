@@ -20,7 +20,7 @@ import {
     const dispatch = useDispatch();
   
     const route = useRoute();
-    const { recipe } = route.params || {}; // Pass the  object as a parameter
+    const { recipe , index = 0} = route.params || {}; // Pass the  object as a parameter
     console.log('recipe',recipe);
     
     const favoriteRecipe = useSelector(
@@ -48,37 +48,39 @@ import {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent} testID="scrollContent"
       >
-        {/* Recipe Image */}
         <View style={styles.imageContainer} testID="imageContainer">
-        {recipe.image && (
-            <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
-          )}
-        </View>
-        <View
-          style={styles.topButtonsContainer} testID="topButtonsContainer"
-        >
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Text>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleToggleFavorite}
-            style={styles.favoriteButton}
-          >
-            <Text>{isFavourite ? "♥" : "♡"}</Text>
-          </TouchableOpacity>
-        </View>
-  
-        {/* Recipe Details */}
-        <View style={styles.contentContainer} testID="contentContainer">
-        <Text style={styles.recipeTitle}>{recipe.title}</Text>
+  {recipe.image && (
+    <Image
+      source={{ uri: recipe.image }}
+      style={[
+        styles.recipeImage,
+        { height: index % 3 === 0 ? hp(25) : hp(35) }, // index should be passed as prop or set to 0 if not available
+      ]}
+    />
+  )}
+</View>
+<View style={styles.topButtonsContainer} testID="topButtonsContainer">
+  <TouchableOpacity
+    onPress={() => navigation.goBack()}
+    style={styles.backButton}
+  >
+    <Text>GoBack</Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    onPress={handleToggleFavorite}
+    style={styles.favoriteButton}
+  >
+    <Text>{isFavourite ? "♥" : "♡"}</Text>
+  </TouchableOpacity>
+</View>
+
+<View style={styles.contentContainer} testID="contentContainer">
+  <Text style={styles.recipeTitle}>{recipe.title}</Text>
   <View style={styles.sectionContainer}>
     <Text style={styles.sectionTitle}>Content</Text>
     <Text style={styles.contentText}>{recipe.description}</Text>
   </View>
-        </View>
+</View>
       </ScrollView>
     );
   }
